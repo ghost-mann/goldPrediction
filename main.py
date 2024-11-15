@@ -55,4 +55,30 @@ def plot_price_history(df):
     plt.savefig('gold_price_history.png')
     plt.close()
 
+def main():
+    print('Loading and cleaning data...')
+    df = load_and_clean_data()
 
+    # calculate metrics
+    df = calculate_price_metrics(df)
+
+    # generate summary statistics
+    print("\nSummary Statistics:")
+    print(df[['Open', 'High', 'Low', 'Close', 'Volume']].describe())
+
+    # plot price history
+    print("\nCreating price history plot:")
+    plot_price_history(df)
+
+    # calculate and display some basic analytics
+    print("\nBasic Analytics:")
+    print(f"Average Daily Return: {df['Daily_Return'].mean():.4}")
+    print(f"Daily Return Volatility: {df['Daily_Return'].std():.4}")
+    print(f"Highest Closing Price: {df['Close'].max():.2f}")
+    print(f"Lowest Closing Price: {df['Close'].min():.2f}")
+
+    print("\nSaving processed data...")
+    df.to_csv('gold_price_history.csv')
+
+if __name__ == '__main__':
+    main()
