@@ -19,6 +19,7 @@ def load_and_clean_data():
     # remove any duplicate dates
     df = df[~df.index.duplicated(keep='first')]
 
+    # return cleaned df
     return df
 
 def calculate_price_metrics(df):
@@ -27,4 +28,31 @@ def calculate_price_metrics(df):
 
     # calculate daily price change
     df['Daily_Return'] = df['Close'].pct_change()
+
+    # calculate moving averages
+    df['MA20'] = df['Close'].rolling(window=20).mean()
+    df['MA50'] = df['Close'].rolling(window=50).mean()
+
+    # calculate volatility
+    df['Volatility'] = df['Daily_Return'].rolling(window=20).std()
+
+    return df
+
+def plot_price_history(df):
+
+    # creating a plot of gold price history with moving averages
+    plt.figure(figsize=(15, 7))
+    plt.plot(df.index, df['Close'], label='Close Price', alpha=0.8)
+    plt.plot(df.index, df['MA20'], label='20-day MA', alpha=0.7)
+    plt.plot(df.index, df['MA50'], label='50-DAY MA', alpha=0.7)
+
+    plt.title('Gold price history with moving averages')
+    plt.xlabel('Date')
+    plt.ylabel('Price')
+    plt.legend()
+    plt.grid(True)
+    plt.tight_layout()
+    plt.savefig('gold_price_history.png')
+    plt.close()
+
 
